@@ -26,7 +26,8 @@ def main(a, b):
     if int(p) == int(q):
         p = 31
         q = 29
-        print(f'P and Q are identical so we have created a new value for p and q, p = {p}, q = {q}')
+        print(f'''P and Q are identical, so we have created a new value for p and q, p = {p}, q = {q}.\n'
+              f'Otherwise, the RSA code would not work.''')
     n = operator.mul(p, q)
     fi_n = operator.mul(operator.sub(p, 1), operator.sub(q, 1))
     e = e_value(n, fi_n)
