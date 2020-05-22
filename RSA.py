@@ -29,14 +29,10 @@ def main(a, b):
     n = operator.mul(p, q)
     fi_n = operator.mul(operator.sub(p, 1), operator.sub(q, 1))
     e = e_value(n, fi_n)
-    d = d_value(fi_n, e, 6)
+    d = d_value(fi_n, e)
     print(f'Public key: ({e}, {n})\n'
           f'Private key : ({d}, {n})')
-    encrypt = input('''Number to be encrypted: ''')
-    encrypted = operator.mod(operator.pow(int(encrypt), e), n)
-    print(f'Number encrypted: {encrypted}')
-    decrypted = operator.mod(operator.pow(int(encrypted), d), n)
-    print(f'Number decrypted: {decrypted}')
+    cipher(d, e, n)
 
 
 def __gcd(a, b):
@@ -70,8 +66,9 @@ def e_value(n, fi_n):
     return poss_e[y]
 
 
-def d_value(fi_n, e, x):
+def d_value(fi_n, e):
     y_ = 0
+    x = 1
     poss_d = {}
     while True:
         x += 1
@@ -83,6 +80,23 @@ def d_value(fi_n, e, x):
             if int(y_) == 11:
                 break
     return poss_d[y_]
+
+
+def cipher(d, e, n):
+    while True:
+        encrypt = input('''Number to be encrypted: ''')
+        encrypt_ = encrypt.isdigit()
+        if encrypt_:
+            encrypted = operator.mod(operator.pow(int(encrypt), e), n)
+            print(f'Number encrypted: {encrypted}')
+            decrypted = operator.mod(operator.pow(int(encrypted), d), n)
+            print(f'Number decrypted: {decrypted}')
+        else:
+            x = 0
+            y = ''
+            while x != len(encrypt):
+                x += 1
+                print(encrypt[operator.sub(x, 1)])
 
 
 run()
