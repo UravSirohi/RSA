@@ -12,7 +12,7 @@ def run():
         if a_ or b_:
             print('Please enter a integer for both entrances.')
         elif int(a) > 31 or int(b) > 31:
-            print('Requested min value of q or/and p is too larger, they both must be less than 21')
+            print('Requested min value of q or/and p is too larger, they both must be less than 32')
         elif int(a) <= 1 or int(b) <= 1:
             print('Requested min value of q or/and p is too small, they both must be more than 1.')
         else:
@@ -26,8 +26,8 @@ def main(a, b):
     if int(p) == int(q):
         p = 31
         q = 29
-        print(f'''P and Q are identical, so we have created a new value for p and q, p = {p}, q = {q}.\n'
-              f'Otherwise, the RSA code would not work.''')
+        print(f'''P and Q are identical, so we have created a new value for p and q, p = {p}, q = {q}.
+Otherwise, the RSA code would not work.''')
     n = operator.mul(p, q)
     fi_n = operator.mul(operator.sub(p, 1), operator.sub(q, 1))
     e = e_value(n, fi_n)
@@ -103,6 +103,7 @@ def cipher(d, e, n):
                 encrypted = operator.mod(operator.pow(int(g), e), n)
                 decrypted = operator.mod(operator.pow(int(encrypted), d), n)
                 y[operator.sub(x, 1)] = decrypted
+            print(y)
             x_ = 0
             y_ = ''
             while x_ != len(encrypt):
