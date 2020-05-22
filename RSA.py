@@ -1,5 +1,6 @@
 import Prime_number_generator
 import operator
+from Generator import *
 
 
 def run():
@@ -84,19 +85,31 @@ def d_value(fi_n, e):
 
 def cipher(d, e, n):
     while True:
-        encrypt = input('''Number to be encrypted: ''')
+        encrypt = input('''Text to be encrypted: ''')
         encrypt_ = encrypt.isdigit()
         if encrypt_:
             encrypted = operator.mod(operator.pow(int(encrypt), e), n)
-            print(f'Number encrypted: {encrypted}')
+            print(f'Text encrypted: {encrypted}')
             decrypted = operator.mod(operator.pow(int(encrypted), d), n)
-            print(f'Number decrypted: {decrypted}')
+            print(f'Text decrypted: {decrypted}')
         else:
             x = 0
-            y = ''
+            y = {}
             while x != len(encrypt):
                 x += 1
-                print(encrypt[operator.sub(x, 1)])
+                z = encrypt.lower()[operator.sub(x, 1)]
+                g = generate_[z]
+                encrypted = operator.mod(operator.pow(int(g), e), n)
+                decrypted = operator.mod(operator.pow(int(encrypted), d), n)
+                y[operator.sub(x, 1)] = decrypted
+            x_ = 0
+            y_ = ''
+            while x_ != len(encrypt):
+                x_ += 1
+                z_ = y[operator.sub(x_, 1)]
+                e_ = generate__[str(z_)]
+                y_ = f'{y_}{e_}'
+            print(f'Text decrypted: {y_}')
 
 
 run()
