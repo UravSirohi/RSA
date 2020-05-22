@@ -97,8 +97,8 @@ def cipher(d, e, n):
             y = {}
             while x != len(encrypt):
                 x += 1
-                z = encrypt.lower()[operator.sub(x, 1)]
-                g = generate_[z]
+                z = encrypt[operator.sub(x, 1)]
+                g = into_num[z]
                 encrypted = operator.mod(operator.pow(int(g), e), n)
                 decrypted = operator.mod(operator.pow(int(encrypted), d), n)
                 y[operator.sub(x, 1)] = decrypted
@@ -107,7 +107,7 @@ def cipher(d, e, n):
             while x_ != len(encrypt):
                 x_ += 1
                 z_ = y[operator.sub(x_, 1)]
-                e_ = generate__[str(z_)]
+                e_ = into_let[str(z_)]
                 y_ = f'{y_}{e_}'
             print(f'Text decrypted: {y_}')
 
