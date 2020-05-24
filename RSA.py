@@ -85,40 +85,42 @@ def d_value(fi_n, e):
 
 
 def cipher(d, e, n):
-    while True:
-        encrypt = input('''Text to be encrypted: ''')
-        encrypt_ = encrypt.isdigit()
-        if encrypt_:
-            encrypted = operator.mod(operator.pow(int(encrypt), e), n)
-            print(f'Text encrypted: {encrypted}')
+    encrypt = input('''Text to be encrypted: ''')
+    encrypt_ = encrypt.isdigit()
+    if encrypt_:
+        encrypted = operator.mod(operator.pow(int(encrypt), e), n)
+        print(f'Text encrypted: {encrypted}')
+        decrypted = operator.mod(operator.pow(int(encrypted), d), n)
+        print(f'Text decrypted: {decrypted}')
+    else:
+        x = 0
+        y = {}
+        key = 0
+        while x != len(encrypt):
+            x += 1
+            z = encrypt[operator.sub(x, 1)]
+            try:
+                into_num[z]
+            except KeyError:
+                key += 1
+                into_num[str(z)] = str(key)
+                into_let[str(key)] = str(z)
+            g = into_num[z]
+            encrypted = operator.mod(operator.pow(int(g), e), n)
             decrypted = operator.mod(operator.pow(int(encrypted), d), n)
-            print(f'Text decrypted: {decrypted}')
-        else:
-            x = 0
-            y = {}
-            key = 0
-            while x != len(encrypt):
-                x += 1
-                z = encrypt[operator.sub(x, 1)]
-                try:
-                    into_num[z]
-                except KeyError:
-                    key += 1
-                    into_num[str(z)] = str(key)
-                    into_let[str(key)] = str(z)
-                g = into_num[z]
-                encrypted = operator.mod(operator.pow(int(g), e), n)
-                decrypted = operator.mod(operator.pow(int(encrypted), d), n)
-                y[operator.sub(x, 1)] = decrypted
-            print(f'Text encrypted: {y}')
-            x_ = 0
-            y_ = ''
-            while x_ != len(encrypt):
-                x_ += 1
-                z_ = y[operator.sub(x_, 1)]
-                e_ = into_let[str(z_)]
-                y_ = f'{y_}{e_}'
-            print(f'Text decrypted: {y_}')
+            y[operator.sub(x, 1)] = decrypted
+        print(f'Text encrypted: {y}')
+        x_ = 0
+        y_ = ''
+        while x_ != len(encrypt):
+            x_ += 1
+            z_ = y[operator.sub(x_, 1)]
+            e_ = into_let[str(z_)]
+            y_ = f'{y_}{e_}'
+        print(f'Text decrypted: {y_}')
+        into_let.clear()
+        into_num.clear()
+        cipher(d, e, n)
 
 
 run()
