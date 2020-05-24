@@ -96,14 +96,21 @@ def cipher(d, e, n):
         else:
             x = 0
             y = {}
+            key = 0
             while x != len(encrypt):
                 x += 1
                 z = encrypt[operator.sub(x, 1)]
+                try:
+                    into_num[z]
+                except KeyError:
+                    key += 1
+                    into_num[str(z)] = str(key)
+                    into_let[str(key)] = str(z)
                 g = into_num[z]
                 encrypted = operator.mod(operator.pow(int(g), e), n)
                 decrypted = operator.mod(operator.pow(int(encrypted), d), n)
                 y[operator.sub(x, 1)] = decrypted
-            print(y)
+            print(f'Text encrypted: {y}')
             x_ = 0
             y_ = ''
             while x_ != len(encrypt):
