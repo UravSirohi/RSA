@@ -1,4 +1,8 @@
-def generate(x):
+def generate(x, n):
+    if int(n) == -1:
+        is_null = True
+    else:
+        is_null = False
     while True:
         x += 1
         if x == 2 or x == 3 or x == 5 or x == 7:
@@ -9,7 +13,11 @@ def generate(x):
             is_integer_11 = not float(x / 5).is_integer()
             is_integer_0 = not float(x / 7).is_integer()
         if is_integer_1 and is_integer_ and is_integer_11 and is_integer_0:
-            return x
+            if is_null:
+                return x
+            else:
+                if int(x) != int(n):
+                    return x
 
 
 def check(x):

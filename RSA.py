@@ -11,46 +11,54 @@ def run():
         b_ = not b.isdigit()
         if a_ or b_:
             print('Please enter a integer for both entrances.')
-        elif int(a) > 31 or int(b) > 31:
-            print('Requested min value of q or/and p is too larger, they both must be less than 32')
-        elif int(a) <= 1 or int(b) <= 1:
-            print('Requested min value of q or/and p is too small, they both must be more than 1.')
         else:
             break
     main(a, b)
 
 
 def main(a, b):
-    p = int(Prime_number_generator.generate(int(a)))
-    q = int(Prime_number_generator.generate(int(b)))
-    if int(p) == int(q):
-        p = 31
-        q = 29
-        print(f'''P and Q are identical, so we have created a new value for p and q, p = {p}, q = {q}.
-Otherwise, the RSA code would not work.''')
+    print('Processing value of p...')
+    p = int(Prime_number_generator.generate(int(a), -1))
+    print('Processing value of q...')
+    q = int(Prime_number_generator.generate(int(b), p))
+    print('Processing value of n...')
     n = operator.mul(p, q)
+    print('Processing value of fi_n...')
     fi_n = operator.mul(operator.sub(p, 1), operator.sub(q, 1))
+    print('Processing value of e...')
     e = e_value(n, fi_n)
+    print('Processing value of d...')
     d = d_value(fi_n, e)
+    print('100% complete')
+    print('Process complete')
     print(f'Public key: ({e}, {n})\n'
           f'Private key : ({d}, {n})')
     cipher(d, e, n)
 
 
-def __gcd(num_1, num_2):
-    if num_1 == 0 or num_2 == 0:
-        return 0
-    if num_1 == num_2:
-        return num_1
-    if num_1 > num_2:
-        return __gcd(num_1 - num_2, num_2)
-    return __gcd(num_1, num_2 - num_1)
+def find_factors(a):
+    x = 1
+    factors = []
+    while x != int(a):
+        x += 1
+        z = operator.truediv(int(a), x)
+        if z.is_integer():
+            factors.append(x)
+    return factors
 
 
 def co_prime(a, b):
-    if __gcd(a, b) == 1:
-        return True
-    return False
+    num_1 = find_factors(a)
+    num_2 = find_factors(b)
+    x = -1
+    while True:
+        x += 1
+        try:
+            v = num_1[x]
+        except IndexError:
+            return True
+        if v in num_1 and v in num_2:
+            return False
 
 
 def e_value(n, fi_n):
@@ -78,8 +86,9 @@ def d_value(fi_n, e):
         if step_2 == 1:
             number_of_d_poss += 1
             poss_d[number_of_d_poss] = val_being_tested
-            if int(number_of_d_poss) == 11:
+            if int(number_of_d_poss) == 10:
                 break
+            print(f'{number_of_d_poss}0% complete')
     return poss_d[number_of_d_poss]
 
 
@@ -115,7 +124,7 @@ def cipher(d, e, n):
             current_len_val += 1
             current_let = text_encrypted[operator.sub(current_len_val, 1)]
             num_into_let = into_let[str(current_let)]
-            text_decrypted = f'{text_decrypted}{num_into_let}'
+            text_decrypted = f'Processing value of d...\n{text_decrypted}{num_into_let}'
         print(f'Text decrypted: {text_decrypted}')
         into_let.clear()
         into_num.clear()
