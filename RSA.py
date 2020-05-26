@@ -37,51 +37,50 @@ Otherwise, the RSA code would not work.''')
     cipher(d, e, n)
 
 
-def __gcd(a, b):
-    if a == 0 or b == 0:
+def __gcd(num_1, num_2):
+    if num_1 == 0 or num_2 == 0:
         return 0
-    if a == b:
-        return a
-    if a > b:
-        return __gcd(a - b, b)
-    return __gcd(a, b - a)
+    if num_1 == num_2:
+        return num_1
+    if num_1 > num_2:
+        return __gcd(num_1 - num_2, num_2)
+    return __gcd(num_1, num_2 - num_1)
 
 
 def co_prime(a, b):
     if __gcd(a, b) == 1:
         return True
-    else:
-        return False
+    return False
 
 
 def e_value(n, fi_n):
-    x = 1
-    y = 0
+    value_being_tested = 1
+    poss_of_e = 0
     poss_e = {}
-    while x < fi_n:
-        x += 1
-        is_co_prime_n = co_prime(x, n)
-        is_co_prime = co_prime(x, fi_n)
+    while value_being_tested < fi_n:
+        value_being_tested += 1
+        is_co_prime_n = co_prime(value_being_tested, n)
+        is_co_prime = co_prime(value_being_tested, fi_n)
         if is_co_prime and is_co_prime_n:
-            y += 1
-            poss_e[y] = x
-    return poss_e[y]
+            poss_of_e += 1
+            poss_e[poss_of_e] = value_being_tested
+    return poss_e[poss_of_e]
 
 
 def d_value(fi_n, e):
-    y_ = 0
-    x = 1
+    number_of_d_poss = 0
+    val_being_tested = 1
     poss_d = {}
     while True:
-        x += 1
-        z = operator.mul(x, e)
-        y = operator.mod(z, fi_n)
-        if y == 1:
-            y_ += 1
-            poss_d[y_] = x
-            if int(y_) == 11:
+        val_being_tested += 1
+        step_1 = operator.mul(val_being_tested, e)
+        step_2 = operator.mod(step_1, fi_n)
+        if step_2 == 1:
+            number_of_d_poss += 1
+            poss_d[number_of_d_poss] = val_being_tested
+            if int(number_of_d_poss) == 11:
                 break
-    return poss_d[y_]
+    return poss_d[number_of_d_poss]
 
 
 def cipher(d, e, n):
@@ -93,31 +92,31 @@ def cipher(d, e, n):
         decrypted = operator.mod(operator.pow(int(encrypted), d), n)
         print(f'Text decrypted: {decrypted}')
     else:
-        x = 0
-        y = {}
+        current_len_value = 0
+        text_encrypted = {}
         key = 0
-        while x != len(encrypt):
-            x += 1
-            z = encrypt[operator.sub(x, 1)]
+        while current_len_value != len(encrypt):
+            current_len_value += 1
+            current_text = encrypt[operator.sub(current_len_value, 1)]
             try:
-                into_num[z]
+                into_num[current_text] and into_let[current_text]
             except KeyError:
                 key += 1
-                into_num[str(z)] = str(key)
-                into_let[str(key)] = str(z)
-            g = into_num[z]
-            encrypted = operator.mod(operator.pow(int(g), e), n)
+                into_num[str(current_text)] = str(key)
+                into_let[str(key)] = str(current_text)
+            character_into_int = into_num[current_text]
+            encrypted = operator.mod(operator.pow(int(character_into_int), e), n)
             decrypted = operator.mod(operator.pow(int(encrypted), d), n)
-            y[operator.sub(x, 1)] = decrypted
-        print(f'Text encrypted: {y}')
-        x_ = 0
-        y_ = ''
-        while x_ != len(encrypt):
-            x_ += 1
-            z_ = y[operator.sub(x_, 1)]
-            e_ = into_let[str(z_)]
-            y_ = f'{y_}{e_}'
-        print(f'Text decrypted: {y_}')
+            text_encrypted[operator.sub(current_len_value, 1)] = decrypted
+        print(f'Text encrypted: {text_encrypted}')
+        current_len_val = 0
+        text_decrypted = ''
+        while current_len_val != len(encrypt):
+            current_len_val += 1
+            current_let = text_encrypted[operator.sub(current_len_val, 1)]
+            num_into_let = into_let[str(current_let)]
+            text_decrypted = f'{text_decrypted}{num_into_let}'
+        print(f'Text decrypted: {text_decrypted}')
         into_let.clear()
         into_num.clear()
         cipher(d, e, n)
