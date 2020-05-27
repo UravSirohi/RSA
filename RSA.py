@@ -124,7 +124,7 @@ def cipher(d, e, n):
             current_len_val += 1
             current_let = text_encrypted[operator.sub(current_len_val, 1)]
             num_into_let = into_let[str(current_let)]
-            text_decrypted = f'Processing value of d...\n{text_decrypted}{num_into_let}'
+            text_decrypted = f'{text_decrypted}{num_into_let}'
         print(f'Text decrypted: {text_decrypted}')
         into_let.clear()
         into_num.clear()
