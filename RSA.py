@@ -11,6 +11,8 @@ def run():
         b_ = not b.isdigit()
         if a_ or b_:
             print('Please enter a integer for both entrances.')
+        elif int(a) == 1 or int(b) == 1:
+            print('Requested value of a_ and/or b_ is too small they both must be more than one.')
         else:
             break
     main(a, b)
@@ -29,8 +31,7 @@ def main(a, b):
     e = e_value(n, fi_n)
     print('Processing value of d...')
     d = d_value(fi_n, e)
-    print('100% complete')
-    print('Process complete')
+    print('Process fully complete')
     print(f'Public key: ({e}, {n})\n'
           f'Private key : ({d}, {n})')
     cipher(d, e, n)
@@ -62,17 +63,13 @@ def co_prime(a, b):
 
 
 def e_value(n, fi_n):
-    value_being_tested = 1
-    poss_of_e = 0
-    poss_e = {}
-    while value_being_tested < fi_n:
-        value_being_tested += 1
+    value_being_tested = int(fi_n)
+    while value_being_tested != 2:
+        value_being_tested -= 1
         is_co_prime_n = co_prime(value_being_tested, n)
         is_co_prime = co_prime(value_being_tested, fi_n)
         if is_co_prime and is_co_prime_n:
-            poss_of_e += 1
-            poss_e[poss_of_e] = value_being_tested
-    return poss_e[poss_of_e]
+            return int(value_being_tested)
 
 
 def d_value(fi_n, e):
@@ -82,14 +79,12 @@ def d_value(fi_n, e):
     while True:
         val_being_tested += 1
         step_1 = operator.mul(val_being_tested, e)
-        step_2 = operator.mod(step_1, fi_n)
+        step_2 = operator.mod(step_1, int(fi_n))
         if step_2 == 1:
             number_of_d_poss += 1
+            if int(val_being_tested) >= 20000:
+                return val_being_tested
             poss_d[number_of_d_poss] = val_being_tested
-            if int(number_of_d_poss) == 10:
-                break
-            print(f'{number_of_d_poss}0% complete')
-    return poss_d[number_of_d_poss]
 
 
 def cipher(d, e, n):
@@ -104,27 +99,29 @@ def cipher(d, e, n):
         current_len_value = 0
         text_encrypted = {}
         key = 0
+        print('Processing...')
         while current_len_value != len(encrypt):
             current_len_value += 1
             current_text = encrypt[operator.sub(current_len_value, 1)]
             try:
-                into_num[current_text] and into_let[current_text]
+                into_num[current_text]
             except KeyError:
                 key += 1
                 into_num[str(current_text)] = str(key)
                 into_let[str(key)] = str(current_text)
             character_into_int = into_num[current_text]
             encrypted = operator.mod(operator.pow(int(character_into_int), e), n)
-            decrypted = operator.mod(operator.pow(int(encrypted), d), n)
-            text_encrypted[operator.sub(current_len_value, 1)] = decrypted
+            text_encrypted[operator.sub(current_len_value, 1)] = encrypted
         print(f'Text encrypted: {text_encrypted}')
         current_len_val = 0
         text_decrypted = ''
         while current_len_val != len(encrypt):
             current_len_val += 1
-            current_let = text_encrypted[operator.sub(current_len_val, 1)]
-            num_into_let = into_let[str(current_let)]
+            current_num = text_encrypted[operator.sub(current_len_val, 1)]
+            decrypted = operator.mod(operator.pow(int(current_num), d), n)
+            num_into_let = into_let[str(decrypted)]
             text_decrypted = f'{text_decrypted}{num_into_let}'
+            print(text_decrypted)
         print(f'Text decrypted: {text_decrypted}')
         into_let.clear()
         into_num.clear()
