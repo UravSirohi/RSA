@@ -15,26 +15,45 @@ def run():
             print('Requested value of a_ and/or b_ is too small they both must be more than one.')
         else:
             break
-    main(a, b)
+    main(a, b, 0)
 
 
-def main(a, b):
-    print('Processing value of p...')
-    p = int(Prime_number_generator.generate(int(a), -1))
-    print('Processing value of q...')
-    q = int(Prime_number_generator.generate(int(b), p))
-    print('Processing value of n...')
-    n = operator.mul(p, q)
-    print('Processing value of fi_n...')
-    fi_n = operator.mul(operator.sub(p, 1), operator.sub(q, 1))
-    print('Processing value of e...')
-    e = e_value(n, fi_n)
-    print('Processing value of d...')
-    d = d_value(fi_n, e)
-    print('Process fully complete')
-    print(f'Public key: ({e}, {n})\n'
-          f'Private key : ({d}, {n})')
-    cipher(d, e, n)
+def main(a, b, ed):
+    if ed == 0:
+        print('Processing value of p...')
+        p = int(f'{Prime_number_generator.generate(int(a), -1)}')
+        print('Processing value of q...')
+        q = int(f'{Prime_number_generator.generate(int(b), p)}')
+        print('Processing value of n...')
+        n = operator.mul(p, q)
+        print('Processing value of fi_n...')
+        fi_n = operator.mul(operator.sub(p, 1), operator.sub(q, 1))
+        print('Processing value of e...')
+        e = int(f'{e_value(n, fi_n)}')
+        print('Processing value of d...')
+        d = int(f'{d_value(fi_n, e)}')
+        print('Process fully complete')
+        print(f'Public key: ({e}, {n})\n'
+              f'Private key : ({d}, {n})')
+        cipher(d, e, n)
+    elif ed == -1:
+        p = int(f'{Prime_number_generator.generate(int(a), -1)}')
+        q = int(f'{Prime_number_generator.generate(int(b), p)}')
+        n = operator.mul(p, q)
+        fi_n = operator.mul(operator.sub(p, 1), operator.sub(q, 1))
+        e = int(f'{e_value(n, fi_n)}')
+        d = int(f'{d_value(fi_n, e)}')
+        values = {
+            'p': p,
+            'q': q,
+            'n': n,
+            'fi_n': fi_n,
+            'e': e,
+            'd': d,
+            'public key': f'({e}, {n})',
+            'private key': f'({d}, {n})'
+        }
+        return values
 
 
 def find_factors(a):
@@ -73,18 +92,17 @@ def e_value(n, fi_n):
 
 
 def d_value(fi_n, e):
-    number_of_d_poss = 0
     val_being_tested = 1
-    poss_d = {}
+    val_being_tested_ = 1
     while True:
         val_being_tested += 1
         step_1 = operator.mul(val_being_tested, e)
         step_2 = operator.mod(step_1, int(fi_n))
-        if step_2 == 1:
-            number_of_d_poss += 1
-            if int(val_being_tested) >= 20000:
-                return val_being_tested
-            poss_d[number_of_d_poss] = val_being_tested
+        if step_2 == 1 and int(val_being_tested) >= 20000 and val_being_tested != e:
+            if val_being_tested_ < val_being_tested:
+                return val_being_tested_
+            return val_being_tested
+        val_being_tested_ = val_being_tested
 
 
 def cipher(d, e, n):
@@ -121,7 +139,6 @@ def cipher(d, e, n):
             decrypted = operator.mod(operator.pow(int(current_num), d), n)
             num_into_let = into_let[str(decrypted)]
             text_decrypted = f'{text_decrypted}{num_into_let}'
-            print(text_decrypted)
         print(f'Text decrypted: {text_decrypted}')
         into_let.clear()
         into_num.clear()
