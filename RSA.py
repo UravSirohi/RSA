@@ -21,17 +21,17 @@ def run():
 def main(a, b, ed):
     if ed == 0:
         print('Processing value of p...')
-        p = int(f'{Prime_number_generator.generate(int(a), -1)}')
+        p = Prime_number_generator.generate(int(a), -1)
         print('Processing value of q...')
-        q = int(f'{Prime_number_generator.generate(int(b), p)}')
+        q = Prime_number_generator.generate(int(b), p)
         print('Processing value of n...')
         n = operator.mul(p, q)
         print('Processing value of fi_n...')
         fi_n = operator.mul(operator.sub(p, 1), operator.sub(q, 1))
         print('Processing value of e...')
-        e = int(f'{e_value(n, fi_n)}')
+        e = e_value(n, fi_n)
         print('Processing value of d...')
-        d = int(f'{d_value(fi_n, e)}')
+        d = d_value(fi_n, e)
         print('Process fully complete')
         print(f'Public key: ({e}, {n})\n'
               f'Private key : ({d}, {n})')
@@ -92,17 +92,19 @@ def e_value(n, fi_n):
 
 
 def d_value(fi_n, e):
-    val_being_tested = 1
-    val_being_tested_ = 1
+    value_being_tested = 1
+    latest_key = 0
+    poss_d = {}
     while True:
-        val_being_tested += 1
-        step_1 = operator.mul(val_being_tested, e)
-        step_2 = operator.mod(step_1, int(fi_n))
-        if step_2 == 1 and int(val_being_tested) >= 20000 and val_being_tested != e:
-            if val_being_tested_ < val_being_tested:
-                return val_being_tested_
-            return val_being_tested
-        val_being_tested_ = val_being_tested
+        value_being_tested += 1
+        step_1 = operator.mul(value_being_tested, e)
+        step_2 = operator.mod(step_1, fi_n)
+        if step_2 == 1:
+            latest_key += 1
+            poss_d[latest_key] = value_being_tested
+            if int(latest_key) == 3:
+                break
+    return poss_d[latest_key]
 
 
 def cipher(d, e, n):
@@ -115,29 +117,43 @@ def cipher(d, e, n):
         print(f'Text decrypted: {decrypted}')
     else:
         current_len_value = 0
+        current_key_ = 0
         text_encrypted = {}
-        key = 0
+        key = 99
         print('Processing...')
         while current_len_value != len(encrypt):
             current_len_value += 1
             current_text = encrypt[operator.sub(current_len_value, 1)]
+            print(f'current_text: {current_text}')
+            print(f'current_len_value: {current_len_value}')
             try:
                 into_num[current_text]
             except KeyError:
-                key += 1
+                print('Excepted')
+                key += operator.add(int(key), 1)
+                print(key)
                 into_num[str(current_text)] = str(key)
                 into_let[str(key)] = str(current_text)
-            character_into_int = into_num[current_text]
+            character_into_int = into_num[str(current_text)]
+            print(f'character into int: {character_into_int}')
             encrypted = operator.mod(operator.pow(int(character_into_int), e), n)
-            text_encrypted[operator.sub(current_len_value, 1)] = encrypted
+            text_encrypted[current_key_] = encrypted
+            current_key_ += 1
         print(f'Text encrypted: {text_encrypted}')
-        current_len_val = 0
+        current_len_val_ = 0
         text_decrypted = ''
-        while current_len_val != len(encrypt):
-            current_len_val += 1
-            current_num = text_encrypted[operator.sub(current_len_val, 1)]
+        while current_len_val_ != len(encrypt):
+            current_len_val_ += 1
+            print(f'Text current_len_val_: {current_len_val_}')
+            current_num = text_encrypted[operator.sub(current_len_val_, 1)]
+            print(f'Text current_num: {current_num}')
             decrypted = operator.mod(operator.pow(int(current_num), d), n)
-            num_into_let = into_let[str(decrypted)]
+            print(f'Text decrypted: {decrypted}')
+            try:
+                num_into_let = into_let[str(decrypted)]
+            except KeyError:
+                num_into_let = '*'
+            print(f'number_into_let: {num_into_let}')
             text_decrypted = f'{text_decrypted}{num_into_let}'
         print(f'Text decrypted: {text_decrypted}')
         into_let.clear()
